@@ -21,6 +21,30 @@
         <script src="assets/js/homepage.js"></script>
     </head> 
     <body>
+        {% if activehatch %}
+        <script src="/assets/js/activehatch.js"></script>
+
+        <div class="activehatch">
+            <div class="container">
+                <section class="row">
+                    <div class="threecol">
+                        <h2>
+                            <img src="/assets/img/ah.jpg" alt="aH Logo">
+                            Active&nbsp;Hatch
+                        </h2>
+                    </div>
+                    <p class="sixcol">
+                        Hello! I see you just tried to reach the old Active Hatch site. 
+                        Since my personal site now shows my recent work and skills set, 
+                        I decided to consolodate down to a single, all-encompasing site. 
+                        If you want to get in contact with me about anything freelance 
+                        related, please email me at <a href="mailto:craig@activehatch.com">craig@activehatch.com</a>.
+                    </p>
+                </section>
+            </div>
+        </div>
+        <span class="close_ah"><span class="close">CLOSE</span><span class="bg_triangle"></span></span>
+        {% endif %}
         <div class="container">
             <section class="row about">
                 <h2>About</h2>
