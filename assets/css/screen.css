@@ -91,10 +91,6 @@ ul {
 	list-style: none;
 }
 
-html .row {
-	min-width: 715px;
-}
-
 
 
 /* -------------------------------------------------------------------------- */
@@ -344,6 +340,11 @@ html .row {
 /* -------------------------------------------------------------------------- */
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+
+	html .row {
+		min-width: 715px;
+	}
+
 	.sites li time {
 		background: #FF6240;
 	}
@@ -356,6 +357,10 @@ html .row {
 
 	h1, h2 {
 		padding: 0 20px;
+	}
+
+	html .row {
+		min-width: 100%;
 	}
 
 	.social ul {
