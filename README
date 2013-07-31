@@ -1,0 +1,10 @@
+To run locally, install RVM and then create your virtual environment.
+
+# first time
+rvm use 1.9.3@craigruks.com --create
+gem install bundler
+bundle install
+
+# future use
+rvm gemset use craigruks.com
+jekyll serve
