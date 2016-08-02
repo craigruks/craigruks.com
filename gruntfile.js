@@ -9,21 +9,20 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-
     // Sync up files to Amazon S3
     aws_s3: {
       options: {
-        accessKeyId: 'AKIAJYLZ3TXS43QZIS2Q',
-        secretAccessKey: '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',
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         uploadConcurrency: 5,
         downloadConcurrency: 5,
-        excludedFromGzip: ['*.gif', '*.jpg', '*.png', '*.ico']
+        excludedFromGzip: ['*.ico']
       },
       production: {
         options: {
           // debug: true,
           differential: true,
-          bucket: 'craigruks-com'
+          bucket: process.env.AWS_BUCKET
         },
         files: [
           {expand: true, cwd: 'build/', src: ['**'], dest: ''}
@@ -31,104 +30,121 @@ module.exports = function(grunt) {
       },
     },
 
-
-    // Deletes all .tmp.* files, but skips min.js files
+    // Deletes all .tmp.* files
     clean: {
+      // used at start to wipe folder
       build: {
-        src: [ 'build' ]
+        src: ['build']
       },
 
-      js: ["build/**/*.js", "!build/**/*.gz.js"],
-      css: ["build/**/*.css", "!build/**/*.gz.css"],
-      html: ["build/*.tmp.html"]
+      // used at end to clean out defunct files, folders
+      css: ['build/css'],
+      html: ['build/*.tmp.html']
     },
 
+    // local http server
+    connect: {
+      src: {
+        options: {
+          keepalive: true,
+          livereload: true,
+          port: 8000,
+          base: {
+            path: 'src'
+          }
+        }
+      },
+      build: {
+        options: {
+          keepalive: true,
+          port: 8000,
+          base: {
+            path: 'build'
+          }
+        }
+      }
+    },
+
+    // Copy over favicon
+    copy: {
+      main: {
+        files: [
+          // includes files within path
+          {
+            expand: true,
+            src: ['src/img/*'],
+            dest: 'build/img/',
+            filter: 'isFile',
+            flatten: true
+          },
+        ],
+      },
+    },
 
     // Minify CSS files
     cssmin: {
       combine: {
         files: {
-          'build/css/homepage.gz.css': ['craigruks/css/styles.css']
+          'build/css/homepage.gz.css': ['src/css/styles.css']
         }
       }
     },
 
-
-    // Optimize image sizes
-    imagemin: {
-      dynamic: {
-        files: [{
-          expand: true,
-          cwd: 'craigruks/img/',
-          src: ['**/*.{png,jpg,gif,ico}'],
-          dest: 'build/img/'
-        }]
-      }
+    // minify HTML
+    htmlmin: {
+      dist: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: {
+          'build/index.html': 'build/index.tmp.html',  // 'destination': 'source'
+        }
+      },
     },
-
 
     // Update HTML to have paths of minified CSS, JS
     processhtml: {
       dist: {
         files: {
-          'build/index.html': ['craigruks/index.html']
+          'build/index.tmp.html': ['src/index.html']
         }
       }
     },
-
 
     // Convert SCSS to CSS
     sass: {
       dist: {
         files: {
-          'craigruks/css/styles.css' : 'craigruks/css/styles.scss'
+          'src/css/styles.css' : 'src/css/styles.scss'
         }
       }
     },
-
-
-    // Minify JS files
-    uglify: {
-      build: {
-        files: {
-          'build/js/homepage.gz.js': [
-            'craigruks/js/zepto.min.js',
-            'craigruks/js/homepage.js'
-          ]
-        }
-      }
-    },
-
 
     // This runs `sass` grunt command whenever any new SASS is written
     // Start this up (by running `grunt watch` in this dir) whenever making any style changes
     watch: {
       css: {
-        files: 'craigruks/**/*.scss',
+        files: 'src/**/*.scss',
         tasks: ['sass']
       }
     }
-
   });
 
 
-
   // 3. Where we tell Grunt we plan to use this plug-in.
+  grunt.loadNpmTasks('grunt-aws-s3-gzip');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-compress');
-  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-imagemin');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-sass');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-processhtml');
-  grunt.loadNpmTasks('grunt-aws-s3-gzip');
 
 
-
-  // 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
+  // 4. Where we tell Grunt what to do when we type 'grunt' into the terminal.
 
   // By default, do nothing
   grunt.registerTask('default', []);
@@ -136,13 +152,14 @@ module.exports = function(grunt) {
   // Build command to generate optimized site
   grunt.registerTask('build', [
     'clean:build',
+    'copy:main',
     'cssmin',
-    'uglify',
     'processhtml',
-    'imagemin'
+    'htmlmin',
+    'clean:css',
+    'clean:html',
   ]);
 
   // Send files up to s3
-  grunt.registerTask('production', [ 'build', 'aws_s3' ]);
-
+  grunt.registerTask('production', ['build', 'aws_s3']);
 };
