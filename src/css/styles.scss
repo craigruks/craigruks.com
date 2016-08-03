@@ -1,58 +1,86 @@
 @import url(http://fonts.googleapis.com/css?family=Ropa+Sans|PT+Sans+Narrow);
 
+// viewport range
+$min_width: 400;
+$max_width: 1440;
+
+// font-size px range
+$min_font: 12;
+$max_font: 24;
+
+$color-red: rgb(255, 87, 87);
+
 // thanks to paulirish.com/2012/box-sizing-border-box-ftw/
 html {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 *, *:before, *:after {
   box-sizing: inherit;
 }
-.asdf {
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
+
 body {
   color: rgba(0,0,0,0.60);
   font-family: 'Ropa Sans', Arial, sans-serif;
-  font-size: 16px;
-  margin: 0 auto;
-  min-width: 340px;
-  padding: 0;
-  position: relative;
-  top: 10vh;
-  width: 80%;
+  font-size: #{$min_font}px;
+  text-align: center;
+
+  // allows .content to be vertically centered
+  &:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
 }
 
 // Custom selection styles
 ::-moz-selection {
-  background: rgb(255, 87, 87);
+  background: $color-red;
   color: rgb(255, 255, 255);
 }
 ::selection {
-  background: rgb(255, 87, 87);
+  background: $color-red;
   color: rgb(255, 255, 255);
+}
+
+section {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  width: 90%;
 }
 
 h1 {
   color: rgba(0,0,0,0.70);
   font-family: 'PT Sans Narrow', sans-serif;
   font-size: 3em;
-  line-height: 2.3;
+  line-height: 1;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0.4em;
 
   span {
     color: rgba(0,0,0,0.14);
   }
 }
 
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 li {
   display: block;
-  font-size: 1.1em;
   line-height: 1.4;
   margin: 0;
   padding: 0 0 0.6em 0.6em;
+  position: relative;
 
   // trick to have different colored list item dash
   &:before {
@@ -64,7 +92,7 @@ li {
 }
 
 a {
-  color: rgb(255, 85, 85);
+  color: $color-red;
   text-decoration: none;
 
   &:hover {
@@ -72,21 +100,28 @@ a {
   }
 }
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
 
-
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: #{$min_width}px) and (max-width: #{$max_width}px){
   body {
-    font-size: 14px;
+    $font_range: $max_font - $min_font;
+    $width_range: $max_width - $min_width;
+
+    // original idea from http://madebymike.com.au/writing/precise-control-responsive-typography/
+    // here's how it works:
+    //
+    // find the remaining amount of width in terms of a percentage
+    // `remaining_percent_width = remaining_width / width_range`
+    //
+    // then take the possible font range and multiply by that remaining percentage, gives you the amount
+    // of font size to increase
+    // `min_font + font_range * remaining_percent_width`
+    font-size: calc( #{$min_font}px + #{$font_range} * ( (100vw - #{$min_width}px) / #{$width_range} ));
   }
 }
 
-@media (max-width: 767px) {
+// restrict font-size at larger resolutions
+@media (min-width: #{$max_width}px){
   body {
-    font-size: 12px;
+    font-size: #{$max_font}px;
   }
 }
