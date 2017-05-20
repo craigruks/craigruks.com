@@ -8,6 +8,7 @@ Quick one pager to link out to where I am active online. All notes here are for 
 ### Installation
 - Install ruby + rbenv, then `bundle install`
 - Install nvm, then follow directions in gruntfile.js
+- I recommend copying the contents of `.bashrc` into your actual bash profile, running to get into this env
 
 ### Usage
 - `grunt build` to build production HTML file
