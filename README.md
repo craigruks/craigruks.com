@@ -9,27 +9,19 @@ Quick one pager to link out to where I am active online. All notes here are for 
 - Install ruby + rbenv, then `bundle install`
 - Install nvm, then follow directions in gruntfile.js
 - I recommend copying the contents of `.bashrc` into your actual bash profile, running to get into this env
+- I leverage [Cloudflare in front of Zeit](https://zeit.co/docs/v2/custom-domains#cloudflare), caching on top of static deployment (with serverless function if I need)
 
 ### Usage
 - `grunt build` to build production HTML file
-- `grunt connect:build` to http serve `build/*`
+- `grunt connect:public` to http serve `public/*`
 - `grunt connect:src` to http serve `src/*`
-- `grunt production` to build, then push up to s3
-- `grunt watch` to rebuild sass on save
+- `grunt watch` to rebuild on save
 
 ### Deployment
 ```bash
-# rm old
-now rm -y craigruks-com
-
-# deploy new
-now --public ./build -n craigruks-com
-
-# point craigruks.com to .sh site
-URL=`now ls craigruks-com | grep NPM | awk '{print $2}'`
-now alias "${URL}" www.craigruks.com
-
-# redirect to www
-now -e REDIRECT_URL=https://craigruks.com/ now-examples/redirect
-now alias https://now-examples-redirect-[generated-from-last-cmd].now.sh www.craigruks.com
+# deploy
+# when running `now`, Zeit by default deploys the `./public` dir as a static site
+grunt build
+now
+now --prod
 ```

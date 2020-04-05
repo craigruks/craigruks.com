@@ -1,9 +1,10 @@
 {
-  "name": "craigruks.com",
+  "name": "ruks.dev",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": "https://github.com/craigruks/ruks.dev",
   "version": "1.0.0",
   "devDependencies": {
     "grunt": "~0.4.5",
-    "grunt-aws-s3-gzip": "~0.9.1",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-copy": "~0.5.0",

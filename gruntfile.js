@@ -9,37 +9,16 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    // Sync up files to Amazon S3
-    aws_s3: {
-      options: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-        uploadConcurrency: 5,
-        downloadConcurrency: 5,
-        excludedFromGzip: ['*.ico']
-      },
-      production: {
-        options: {
-          // debug: true,
-          differential: true,
-          bucket: process.env.AWS_BUCKET
-        },
-        files: [
-          {expand: true, cwd: 'build/', src: ['**'], dest: ''}
-        ]
-      },
-    },
-
     // Deletes all .tmp.* files
     clean: {
       // used at start to wipe folder
-      build: {
-        src: ['build']
+      public: {
+        src: ['public']
       },
 
       // used at end to clean out defunct files, folders
-      css: ['build/css'],
-      html: ['build/*.tmp.html']
+      css: ['public/css'],
+      html: ['public/*.tmp.html']
     },
 
     // local http server
@@ -48,18 +27,18 @@ module.exports = function(grunt) {
         options: {
           keepalive: true,
           livereload: true,
-          port: 8000,
+          port: 8080,
           base: {
             path: 'src'
           }
         }
       },
-      build: {
+      public: {
         options: {
           keepalive: true,
           port: 8000,
           base: {
-            path: 'build'
+            path: 'public'
           }
         }
       }
@@ -73,7 +52,7 @@ module.exports = function(grunt) {
           {
             expand: true,
             src: ['src/img/*'],
-            dest: 'build/img/',
+            dest: 'public/img/',
             filter: 'isFile',
             flatten: true
           },
@@ -85,7 +64,7 @@ module.exports = function(grunt) {
     cssmin: {
       combine: {
         files: {
-          'build/css/homepage.gz.css': ['src/css/styles.css']
+          'public/css/homepage.gz.css': ['src/css/styles.css']
         }
       }
     },
@@ -98,7 +77,7 @@ module.exports = function(grunt) {
           collapseWhitespace: true
         },
         files: {
-          'build/index.html': 'build/index.tmp.html',  // 'destination': 'source'
+          'public/index.html': 'public/index.tmp.html',  // 'destination': 'source'
         }
       },
     },
@@ -107,7 +86,7 @@ module.exports = function(grunt) {
     processhtml: {
       dist: {
         files: {
-          'build/index.tmp.html': ['src/index.html']
+          'public/index.tmp.html': ['src/index.html']
         }
       }
     },
@@ -125,15 +104,14 @@ module.exports = function(grunt) {
     // Start this up (by running `grunt watch` in this dir) whenever making any style changes
     watch: {
       css: {
-        files: 'src/**/*.scss',
-        tasks: ['sass']
+        files: 'src/*',
+        tasks: ['build']
       }
     }
   });
 
 
   // 3. Where we tell Grunt we plan to use this plug-in.
-  grunt.loadNpmTasks('grunt-aws-s3-gzip');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -151,7 +129,7 @@ module.exports = function(grunt) {
 
   // Build command to generate optimized site
   grunt.registerTask('build', [
-    'clean:build',
+    'clean:public',
     'copy:main',
     'cssmin',
     'processhtml',
