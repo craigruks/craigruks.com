@@ -12,5 +12,8 @@
     "grunt-contrib-sass": "~0.7.3",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-processhtml": "~0.3.3"
+  },
+  "dependencies": {
+    "now": "^14.0.3"
   }
 }
