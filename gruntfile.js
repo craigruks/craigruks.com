@@ -78,6 +78,7 @@ module.exports = function(grunt) {
         },
         files: {
           'public/index.html': 'public/index.tmp.html',  // 'destination': 'source'
+          'public/404.html': 'public/404.tmp.html'
         }
       },
     },
@@ -86,7 +87,8 @@ module.exports = function(grunt) {
     processhtml: {
       dist: {
         files: {
-          'public/index.tmp.html': ['src/index.html']
+          'public/index.tmp.html': ['src/index.html'],
+          'public/404.tmp.html': ['src/404.html']
         }
       }
     },
