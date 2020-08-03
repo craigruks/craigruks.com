@@ -107,7 +107,7 @@ module.exports = function(grunt) {
     watch: {
       css: {
         files: 'src/*',
-        tasks: ['build']
+        tasks: ['sass']
       }
     }
   });
@@ -132,6 +132,7 @@ module.exports = function(grunt) {
   // Build command to generate optimized site
   grunt.registerTask('build', [
     'clean:public',
+    'sass',
     'copy:main',
     'cssmin',
     'processhtml',

@@ -4,7 +4,7 @@
   "repository": "https://github.com/craigruks/ruks.dev",
   "version": "1.0.0",
   "devDependencies": {
-    "grunt": "~1.1.0",
+    "grunt": "^1.1.0",
     "grunt-contrib-clean": "~2.0.0",
     "grunt-contrib-connect": "^2.1.0",
     "grunt-contrib-copy": "~1.0.0",
@@ -12,7 +12,8 @@
     "grunt-contrib-htmlmin": "^3.1.0",
     "grunt-contrib-sass": "~1.0.0",
     "grunt-contrib-watch": "~1.1.0",
-    "grunt-processhtml": "~0.4.2"
+    "grunt-processhtml": "~0.4.2",
+    "lodash": ">=4.17.19"
   },
   "dependencies": {
     "now": "^17.1.1"
