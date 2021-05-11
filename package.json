@@ -13,7 +13,7 @@
     "grunt-contrib-sass": "~1.0.0",
     "grunt-contrib-watch": "~1.1.0",
     "grunt-processhtml": "~0.4.2",
-    "lodash": ">=4.17.19"
+    "lodash": ">=4.17.21"
   },
   "dependencies": {
     "now": "^17.1.1"
